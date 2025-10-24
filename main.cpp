@@ -1,34 +1,58 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <cmath>
+#include <iostream>
+#include "LevelLoader.h"
+
+static sf::Vector2f keyboardInput()
+{
+	sf::Vector2f movement(0.f, 0.f);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+		movement.y -= 1.f;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+		movement.y += 1.f;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+		movement.x -= 1.f;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+		movement.x += 1.f;
+	if (movement.length() != 0) {
+		//std::cout << "Player 1 movement: " << movement.x << ", " << movement.y << std::endl;
+		movement = movement.normalized();
+	}
+	return movement;
+}
+
+static sf::Vector2f mouseInput(const sf::RenderWindow& window)
+{
+	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+	//std::cout << "Mouse position: " << mousePos.x << ", " << mousePos.y << std::endl;
+	return sf::Vector2f(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+}
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({ 900, 600 }), "SFML works!");
-    // Moon
-    sf::CircleShape moon(30.f);
-    moon.setFillColor(sf::Color::Green);
-    // Planet
-    sf::ConvexShape planet(6);
-    planet.setFillColor(sf::Color::Red);
-    planet.setPoint(0, sf::Vector2f(40, 0));
-    planet.setPoint(1, sf::Vector2f(80, 20));
-    planet.setPoint(2, sf::Vector2f(80, 60));
-    planet.setPoint(3, sf::Vector2f(40, 80));
-    planet.setPoint(4, sf::Vector2f(0, 60));
-    planet.setPoint(5, sf::Vector2f(0, 20));
+    sf::RenderWindow window(sf::VideoMode({ 900, 600 }), "Zadanie 3 - Dawid Gradowski 251524");
+	unsigned int framerate = 60;
+	window.setFramerateLimit(framerate);
 
-    float p_x = 200;
-    float p_y = 100;
+	float deltaTime = 1.f / static_cast<float>(framerate);
 
-    float m_x = 100;
-    float m_y = 100;
+	// Player 1
+	sf::RectangleShape player1(sf::Vector2f(60.f, 60.f));
+	player1.setFillColor(sf::Color::Yellow);
+
+    // Player 2
+    sf::CircleShape player2(30.f);
+    player2.setFillColor(sf::Color (0,255,0,128));
 
     float t = 0;
 
     sf::Texture t_moon("./assets/textures/moon.jpg");
     sf::Texture t_planet("./assets/textures/planet.jpg");
-    moon.setTexture(&t_moon);
-    planet.setTexture(&t_planet);
+    player1.setTexture(&t_moon);
+    player2.setTexture(&t_planet);
+	LevelLoader levelLoader({ 32.f, 32.f });
+	levelLoader.loadFromFile("./assets/maps/map.txt");
 
     while (window.isOpen())
     {
@@ -38,13 +62,19 @@ int main()
                 window.close();
         }
 
-        t += .001f;
-        planet.setPosition(sf::Vector2f(450 + (std::sin(t) * p_x) - 40, 300 + (std::cos(t) * p_y) - 40));
-        sf::Vector2f p_pos = planet.getPosition();
-        moon.setPosition(sf::Vector2f(p_pos.x + 10 + (std::sin((t * 0.5f) + 0.5) * m_x), p_pos.y + 10 + (std::cos((t * 0.5f) + 0.5) * m_y)));
+		// Player 1 movement
+		
+		player1.move(keyboardInput() * 250.f * deltaTime);
+
+		sf::Vector2f p2_pos = player2.getPosition();
+
+		float t = 0.9f;
+
+		player2.setPosition({ (p2_pos.x * t + mouseInput(window).x * (1.f - t)), (p2_pos.y * t + mouseInput(window).y * (1.f - t)) });
+
         window.clear(sf::Color::Blue);
-        window.draw(moon);
-        window.draw(planet);
+        window.draw(player1);
+        window.draw(player2);
         window.display();
     }
 }

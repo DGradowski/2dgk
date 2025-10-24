@@ -1,0 +1,9 @@
+﻿  LevelLoader.cpp
+C:\Users\dgrad\Pulpit\Studia\5semestr\2dgc\repo2\LevelLoader.cpp(20,4): warning C4150: deletion of pointer to incomplete type 'Tile'; no destructor called
+      C:\Users\dgrad\Pulpit\Studia\5semestr\2dgc\repo2\LevelLoader.h(9,7):
+      see declaration of 'Tile'
+  
+  main.cpp
+  Generating Code...
+C:\Users\dgrad\Pulpit\Studia\5semestr\2dgc\repo2\LevelLoader.cpp(49,1): warning C4715: 'LevelLoader::loadFromFile': not all control paths return a value
+  2d-games-classes.vcxproj -> C:\Users\dgrad\Pulpit\Studia\5semestr\2dgc\repo2\x64\Debug\2d-games-classes.exe
