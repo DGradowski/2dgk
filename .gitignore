@@ -1,0 +1,17 @@
+# Pliki i katalogi generowane przez CMake
+/build/
+/build-*/
+/out/
+*.exe
+*.dll
+*.lib
+*.so
+
+# Pliki tymczasowe IDE
+.vs/
+.vscode/
+CMakeUserPresets.json
+
+# Pliki systemowe
+.DS_Store
+Thumbs.db
