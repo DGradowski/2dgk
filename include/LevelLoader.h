@@ -5,21 +5,14 @@
 #include <string>
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include "TileTypes.h"
 
-class Tile;
+using TileData = std::vector<std::vector<TileType>>;
 
-class LevelLoader
-{
+class LevelLoader {
 public:
-	LevelLoader(sf::Vector2f tileSize);
-	~LevelLoader();
-	bool loadFromFile(const std::string& path);
-private:
-	std::unordered_map<std::string, const Tile*> pLevelData;
-	sf::Vector2f pTileSize;
-	Tile*** pLevelGrid;
-	int pLevelWidth;
-	int pLevelHeight;
+	static TileData loadTileData(const std::string& path);
 };
 
 #endif // LEVELLOADER_H

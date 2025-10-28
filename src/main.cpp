@@ -3,6 +3,9 @@
 #include <cmath>
 #include <iostream>
 #include "LevelLoader.h"
+#include "TileFactory.h"
+#include "GameMap.h"
+#include "TileTypes.h"
 
 static sf::Vector2f keyboardInput()
 {
@@ -16,7 +19,7 @@ static sf::Vector2f keyboardInput()
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 		movement.x += 1.f;
 	if (movement.length() != 0) {
-		//std::cout << "Player 1 movement: " << movement.x << ", " << movement.y << std::endl;
+		std::cout << "Player 1 movement: " << movement.x << ", " << movement.y << std::endl;
 		movement = movement.normalized();
 	}
 	return movement;
@@ -25,7 +28,7 @@ static sf::Vector2f keyboardInput()
 static sf::Vector2f mouseInput(const sf::RenderWindow& window)
 {
 	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-	//std::cout << "Mouse position: " << mousePos.x << ", " << mousePos.y << std::endl;
+	std::cout << "Mouse position: " << mousePos.x << ", " << mousePos.y << std::endl;
 	return sf::Vector2f(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
 }
 
@@ -36,6 +39,7 @@ int main()
 	window.setFramerateLimit(framerate);
 
 	float deltaTime = 1.f / static_cast<float>(framerate);
+	const sf::Vector2f TILE_SIZE = { 48.f, 48.f };
 
 	// Player 1
 	sf::RectangleShape player1(sf::Vector2f(60.f, 60.f));
@@ -51,8 +55,13 @@ int main()
     sf::Texture t_planet("./res/textures/planet.jpg");
     player1.setTexture(&t_moon);
     player2.setTexture(&t_planet);
-	LevelLoader levelLoader({ 32.f, 32.f });
-	levelLoader.loadFromFile("./res/maps/map.txt");
+
+    TileFactory tileFactory(TILE_SIZE);
+
+    TileData levelData = LevelLoader::loadTileData("./res/maps/map.txt");
+
+    GameMap gameMap(TILE_SIZE);
+    gameMap.loadLevel(levelData, tileFactory);
 
     while (window.isOpen())
     {
@@ -73,6 +82,7 @@ int main()
 		player2.setPosition({ (p2_pos.x * t + mouseInput(window).x * (1.f - t)), (p2_pos.y * t + mouseInput(window).y * (1.f - t)) });
 
         window.clear(sf::Color::Blue);
+        window.draw(gameMap);
         window.draw(player1);
         window.draw(player2);
         window.display();

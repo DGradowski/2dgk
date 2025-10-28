@@ -1,50 +1,66 @@
 #include "LevelLoader.h"
 #include <fstream>
+#include <sstream>
 #include <iostream>
 
-LevelLoader::LevelLoader(sf::Vector2f tileSize)
+TileData LevelLoader::loadTileData(const std::string& path)
 {
-	pTileSize = tileSize;
-	pLevelGrid = new Tile**[1];
-	for (int y = 0; y < 1; ++y) {
-		pLevelGrid[y] = new Tile*[1];
-	}
-	pLevelWidth = 1;
-	pLevelHeight = 1;
-}
-
-LevelLoader::~LevelLoader()
-{
-	for (int y = 0; y < pLevelHeight; y++) {
-		for (int x = 0; x < pLevelWidth; x++){
-			delete pLevelGrid[y][x];
-		}
-		delete[] pLevelGrid[y];
-	}
-	delete[] pLevelGrid;
-}
-
-bool LevelLoader::loadFromFile(const std::string& path)
-{
-	std::fstream file;
-
-	file.open(path, std::ios::in);
+	std::ifstream file(path);
 	if (!file.is_open()) {
 		std::cerr << "Failed to open level file: " << path << std::endl;
-		return false;
+		return {};
 	}
-	else {
-		std::string line;
-		std::getline(file, line);
+
+	TileData levelData;
+	std::string line;
+	int width = 0;
+	int height = 0;
+
+	if (std::getline(file, line)) {
 		size_t pos = line.find('x');
-		std::string widthStr = line.substr(0, pos);
-		std::string heightStr = line.substr(pos + 1);
-		pLevelWidth = std::stoi(widthStr);
-		pLevelHeight = std::stoi(heightStr);
-;
-		pLevelGrid = new Tile** [pLevelHeight];
-		for (int y = 0; y < pLevelHeight; y++) {
-			pLevelGrid[y] = new Tile* [pLevelWidth];
+		if (pos != std::string::npos) {
+			try {
+				width = std::stoi(line.substr(0, pos));
+				height = std::stoi(line.substr(pos + 1));
+			}
+			catch (const std::exception& e) {
+				std::cerr << "Error parsing dimensions: " << e.what() << std::endl;
+				return {};
+			}
 		}
 	}
+	else {
+		std::cerr << "Level file is empty or malformed." << std::endl;
+		return {};
+	}
+
+    for (int y = 0; y < height; ++y) {
+        if (std::getline(file, line)) {
+
+            std::vector<TileType> row;
+
+            for (char tileChar : line) {
+                if (std::isdigit(tileChar)) {
+                    int tileInt = tileChar - '0';
+
+                    row.push_back(static_cast<TileType>(tileInt));
+                }
+                else {
+                    std::cerr << "Warning: Skipping non-digit character '" << tileChar << "' in row " << y << std::endl;
+                }
+            }
+
+            if (row.size() != width) {
+                std::cerr << "Row " << y << " has incorrect width (" << row.size() << " instead of " << width << ") [Full line: " << line << "]" << std::endl;
+            }
+
+            levelData.push_back(std::move(row));
+        }
+        else {
+            std::cerr << "Error: Expected row " << y << " but reached end of file." << std::endl;
+            break;
+        }
+    }
+
+    return levelData;
 }
