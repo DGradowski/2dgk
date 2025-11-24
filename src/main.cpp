@@ -26,12 +26,30 @@ static sf::Vector2f keyboardInput()
 	return movement;
 }
 
-static sf::Vector2f mouseInput(const sf::RenderWindow& window)
+static sf::Vector2f keyboardInput2()
 {
-	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-	//std::cout << "Mouse position: " << mousePos.x << ", " << mousePos.y << std::endl;
-	return sf::Vector2f(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+	sf::Vector2f movement(0.f, 0.f);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
+		movement.y -= 1.f;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
+		movement.y += 1.f;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+		movement.x -= 1.f;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+		movement.x += 1.f;
+	if (movement.length() != 0) {
+		//std::cout << "Player 1 movement: " << movement.x << ", " << movement.y << std::endl;
+		movement = movement.normalized();
+	}
+	return movement;
 }
+
+//static sf::Vector2f mouseInput(const sf::RenderWindow& window)
+//{
+//	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+//	//std::cout << "Mouse position: " << mousePos.x << ", " << mousePos.y << std::endl;
+//	return sf::Vector2f(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+//}
 
 int main()
 {
@@ -80,16 +98,14 @@ int main()
 		
 		player1->move(keyboardInput() * 250.f * deltaTime);
 
-		sf::Vector2f p2_pos = player2->getPosition();
+		//sf::Vector2f p2_pos = player2->getPosition();
 
-		float t = 0.9f;
+		//float t = 0.9f;
 
-		sf::Vector2i mousePixelPos = sf::Mouse::getPosition(window);
-		sf::Vector2f mouseWorldPos = window.mapPixelToCoords(mousePixelPos, window.getView());
+		//sf::Vector2i mousePixelPos = sf::Mouse::getPosition(window);
+		//sf::Vector2f mouseWorldPos = window.mapPixelToCoords(mousePixelPos, window.getView());
 
-		player2->setPosition({ (p2_pos.x * t + mouseWorldPos.x * (1.f - t)),
-							   (p2_pos.y * t + mouseWorldPos.y * (1.f - t)) });
-
+		player2->move(keyboardInput2() * 250.f * deltaTime);
         window.clear(sf::Color::Blue);
         window.draw(gameMap);
         window.draw(*player1);
