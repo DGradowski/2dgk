@@ -1,5 +1,5 @@
 # Automatycznie znajdź wszystkie pliki .cpp w tym katalogu (src/)
-file(GLOB SRC_FILES "*.cpp")
+file(GLOB_RECURSE SRC_FILES "*.cpp")
 
 # Stwórz plik wykonywalny (target) o nazwie '2dgamesclasses' 
 # (używam nazwy z Twojego 'project()')

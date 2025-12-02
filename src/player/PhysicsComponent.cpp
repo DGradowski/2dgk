@@ -1,4 +1,4 @@
-#include "PhysicsComponent.h"
+#include "player/PhysicsComponent.h"
 
 PhysicsComponent::PhysicsComponent()
 {

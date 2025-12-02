@@ -10,7 +10,7 @@ enum class PlayerState { Idle, Running, Jumping, Falling };
 class PlayerObject
 {
 public:
-	PlayerObject() : state(PlayerState::Idle, isFacingRight(true)) {};
+	PlayerObject() : state(PlayerState::Idle), isFacingRight(true) {};
 	~PlayerObject();
 
 	sf::Vector2f position;

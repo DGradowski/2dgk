@@ -1,5 +1,5 @@
-#include "InputComponent.h"
-#include "PlayerObject.h"
+#include "player/InputComponent.h"
+#include "player/PlayerObject.h"
 
 InputComponent::InputComponent()
 {

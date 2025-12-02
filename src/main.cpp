@@ -7,6 +7,8 @@
 #include "GameMap.h"
 #include "TileTypes.h"
 #include "Camera.h"
+#include "balls/BallPhysics.h"
+#include "balls/Ball.h"
 
 static sf::Vector2f keyboardInput()
 {
@@ -86,6 +88,22 @@ int main()
 	camera.setTarget(player1);
 	camera.setTarget2(player2);
 
+	BallPhysics ballPhysics(true, true);
+	std::shared_ptr<Ball> ball1 = std::make_shared<Ball>(40.f, sf::Vector2f( 100.f, 115.f ), sf::Vector2f(300.f, 0.f), &t_moon, sf::Color::White);
+	std::shared_ptr<Ball> ball2 = std::make_shared<Ball>(30.f, sf::Vector2f( 500.f, 100.f ), sf::Vector2f(-300.f, 0.f), &t_moon, sf::Color::Red);
+	std::shared_ptr<Ball> ball3 = std::make_shared<Ball>(20.f, sf::Vector2f(200.f, 200.f), sf::Vector2f(30.f, 0.f), &t_moon, sf::Color::White);
+	std::shared_ptr<Ball> ball4 = std::make_shared<Ball>(20.f, sf::Vector2f(400.f, 200.f), sf::Vector2f(-30.f, 0.f), &t_moon, sf::Color::Red);
+
+	std::shared_ptr<Ball> ball5 = std::make_shared<Ball>(20.f, sf::Vector2f(300.f, 200.f), sf::Vector2f(0.f, -50.f), &t_moon, sf::Color::White);
+	std::shared_ptr<Ball> ball6 = std::make_shared<Ball>(30.f, sf::Vector2f(300.f, 100.f), sf::Vector2f(0.f, 50.f), &t_moon, sf::Color::Red);
+
+
+	ballPhysics.addBall(ball1);
+	ballPhysics.addBall(ball2);
+	ballPhysics.addBall(ball3);
+	ballPhysics.addBall(ball4);
+	ballPhysics.addBall(ball5);
+	ballPhysics.addBall(ball6);
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -94,23 +112,20 @@ int main()
                 window.close();
         }
 
-		// Player 1 movement
-		
+		ballPhysics.update(deltaTime);
 		player1->move(keyboardInput() * 250.f * deltaTime);
-
-		//sf::Vector2f p2_pos = player2->getPosition();
-
-		//float t = 0.9f;
-
-		//sf::Vector2i mousePixelPos = sf::Mouse::getPosition(window);
-		//sf::Vector2f mouseWorldPos = window.mapPixelToCoords(mousePixelPos, window.getView());
-
 		player2->move(keyboardInput2() * 250.f * deltaTime);
         window.clear(sf::Color::Blue);
         window.draw(gameMap);
         window.draw(*player1);
         window.draw(*player2);
 		camera.move(deltaTime);
+		ball1->draw(window);
+		ball2->draw(window);
+		ball3->draw(window);
+		ball4->draw(window);
+		ball5->draw(window);
+		ball6->draw(window);
         window.display();
     }
 }
