@@ -15,8 +15,6 @@ private:
 	const float m_gravity = 980.0f;
 	float m_jumpForce;
 	sf::FloatRect m_rect;
-
-
 };
 
 

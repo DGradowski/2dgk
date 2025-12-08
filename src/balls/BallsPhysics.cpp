@@ -1,9 +1,11 @@
 #include "balls/BallPhysics.h"
 
-BallPhysics::BallPhysics(bool separating, bool bouncing)
+BallPhysics::BallPhysics(bool separating, bool bouncing,sf::RenderWindow& window)
 	: b_separating(separating), b_bouncing(bouncing)
 {
 	m_Balls = std::vector<std::shared_ptr<Ball>>();
+	m_screenWidth = window.getSize().x;
+	m_screenHeight = window.getSize().y;
 }
 
 void BallPhysics::addBall(std::shared_ptr<Ball> ball) {
@@ -15,10 +17,10 @@ void BallPhysics::update(float deltaTime) {
 	for (auto& ball : m_Balls) {
 		ball->update(deltaTime);
 	}
-	// Handle collisions between balls
 	for (size_t i = 0; i < m_Balls.size(); ++i) {
+		// Collisions between balls
+		auto ballA = m_Balls[i];
 		for (size_t j = i + 1; j < m_Balls.size(); ++j) {
-			auto ballA = m_Balls[i];
 			auto ballB = m_Balls[j];
 			sf::Vector2f posA = ballA->getPosition();
 			sf::Vector2f posB = ballB->getPosition();
@@ -46,5 +48,33 @@ void BallPhysics::update(float deltaTime) {
 				}
 			}
 		}
+		// Collisions with walls
+		float delta;
+		if (ballA->getPosition().x - ballA->getRadius() <= 0) {
+			delta = ballA->getPosition().x - ballA->getRadius();
+			ballA->setVelocity({ -ballA->getVelocity().x, ballA->getVelocity().y });
+			ballA->setPosition({ ballA->getPosition().x - delta, ballA->getPosition().y });
+		}
+		else if (ballA->getPosition().x + ballA->getRadius() >= m_screenWidth) {
+			delta = ballA->getPosition().x + ballA->getRadius() - m_screenWidth;
+			ballA->setVelocity({ -ballA->getVelocity().x, ballA->getVelocity().y });
+			ballA->setPosition({ ballA->getPosition().x - delta, ballA->getPosition().y });
+		}
+		if (ballA->getPosition().y - ballA->getRadius() <= 0) {
+			delta = ballA->getPosition().y - ballA->getRadius();
+			ballA->setVelocity({ ballA->getVelocity().x, -ballA->getVelocity().y });
+			ballA->setPosition({ ballA->getPosition().x, ballA->getPosition().y - delta });
+		}
+		else if (ballA->getPosition().y + ballA->getRadius() >= m_screenHeight) {
+			delta = ballA->getPosition().y + ballA->getRadius() - m_screenHeight;
+			ballA->setVelocity({ ballA->getVelocity().x, -ballA->getVelocity().y });
+			ballA->setPosition({ ballA->getPosition().x, ballA->getPosition().y - delta });
+		}
+	}
+}
+
+void BallPhysics::draw(sf::RenderWindow& window) {
+	for (auto& ball : m_Balls) {
+		ball->draw(window);
 	}
 }

@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "balls/BallPhysics.h"
 #include "balls/Ball.h"
+#include "balls/BallFactory.h"
 
 static sf::Vector2f keyboardInput()
 {
@@ -88,22 +89,16 @@ int main()
 	camera.setTarget(player1);
 	camera.setTarget2(player2);
 
-	BallPhysics ballPhysics(true, true);
-	std::shared_ptr<Ball> ball1 = std::make_shared<Ball>(40.f, sf::Vector2f( 100.f, 115.f ), sf::Vector2f(300.f, 0.f), &t_moon, sf::Color::White);
-	std::shared_ptr<Ball> ball2 = std::make_shared<Ball>(30.f, sf::Vector2f( 500.f, 100.f ), sf::Vector2f(-300.f, 0.f), &t_moon, sf::Color::Red);
-	std::shared_ptr<Ball> ball3 = std::make_shared<Ball>(20.f, sf::Vector2f(200.f, 200.f), sf::Vector2f(30.f, 0.f), &t_moon, sf::Color::White);
-	std::shared_ptr<Ball> ball4 = std::make_shared<Ball>(20.f, sf::Vector2f(400.f, 200.f), sf::Vector2f(-30.f, 0.f), &t_moon, sf::Color::Red);
-
-	std::shared_ptr<Ball> ball5 = std::make_shared<Ball>(20.f, sf::Vector2f(300.f, 200.f), sf::Vector2f(0.f, -50.f), &t_moon, sf::Color::White);
-	std::shared_ptr<Ball> ball6 = std::make_shared<Ball>(30.f, sf::Vector2f(300.f, 100.f), sf::Vector2f(0.f, 50.f), &t_moon, sf::Color::Red);
+	BallPhysics ballPhysics(true, true, window);
+	BallFactory bf(&t_moon, sf::Color::White);
 
 
-	ballPhysics.addBall(ball1);
-	ballPhysics.addBall(ball2);
-	ballPhysics.addBall(ball3);
-	ballPhysics.addBall(ball4);
-	ballPhysics.addBall(ball5);
-	ballPhysics.addBall(ball6);
+	ballPhysics.addBall(bf.createBall({ 300, 200 }, { 100, 100 }));
+	ballPhysics.addBall(bf.createBall({ 1000, 300 }, { -100, -100 }));
+	ballPhysics.addBall(bf.createBall({ 250, 400 }, { 100, -100 }));
+	ballPhysics.addBall(bf.createBall({ 250, 260 }, { -100, 100 }));
+	ballPhysics.addBall(bf.createBall({ 600, 100 }, { 100, 100 }));
+	ballPhysics.addBall(bf.createBall({ 300, 50 }, { -100, 100 }));
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -120,12 +115,7 @@ int main()
         window.draw(*player1);
         window.draw(*player2);
 		camera.move(deltaTime);
-		ball1->draw(window);
-		ball2->draw(window);
-		ball3->draw(window);
-		ball4->draw(window);
-		ball5->draw(window);
-		ball6->draw(window);
+		ballPhysics.draw(window);
         window.display();
     }
 }
