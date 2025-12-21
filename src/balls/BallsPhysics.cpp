@@ -1,4 +1,5 @@
 #include "balls/BallPhysics.h"
+#include <cmath>
 
 BallPhysics::BallPhysics(bool separating, bool bouncing,sf::RenderWindow& window)
 	: b_separating(separating), b_bouncing(bouncing)

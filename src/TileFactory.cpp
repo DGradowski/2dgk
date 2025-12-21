@@ -7,6 +7,8 @@ TileFactory::TileFactory(sf::Vector2f tileSize) : mTileSize(tileSize)
 	registerTileType(TileType::Grass, "./res/textures/grass.jpg", false);
 	registerTileType(TileType::Brick, "./res/textures/brick.jpg", true);
 	registerTileType(TileType::Rock, "./res/textures/rock.jpg", true);
+	registerTileType(TileType::RockWall, "./res/textures/rock_tiles/rocks_tiles2_tilemap1.png", true);
+	registerTileType(TileType::RockBg, "./res/textures/rock_tiles/rocks_tiles2_tilemap7.png", false);
 }
 
 bool TileFactory::registerTileType(TileType type, const std::string& texturePath, bool isCollidable)

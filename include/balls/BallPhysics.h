@@ -15,9 +15,10 @@ public:
 	void update(float deltaTime);
 	void draw(sf::RenderWindow& window);
 
-private:
 	bool b_separating;
 	bool b_bouncing;
+
+private:
 	float m_screenWidth;
 	float m_screenHeight;
 

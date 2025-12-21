@@ -47,22 +47,44 @@ static sf::Vector2f keyboardInput2()
 	return movement;
 }
 
-//static sf::Vector2f mouseInput(const sf::RenderWindow& window)
-//{
-//	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-//	//std::cout << "Mouse position: " << mousePos.x << ", " << mousePos.y << std::endl;
-//	return sf::Vector2f(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-//}
+
+// static bool isPressedP(){
+// 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
+// 		return true;
+// 	}
+// 	else {
+// 		return false;
+// 	}
+// }
+
+
+// static bool isPressedO(){
+// 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::O)) {
+// 		return true;
+// 	}
+// 	else {
+// 		return false;
+// 	}
+// }
+
+
+
+// //static sf::Vector2f mouseInput(const sf::RenderWindow& window)
+// //{
+// //	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+// //	//std::cout << "Mouse position: " << mousePos.x << ", " << mousePos.y << std::endl;
+// //	return sf::Vector2f(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+// //}
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({ 900, 600 }), "Zadanie 3 - Dawid Gradowski 251524");
+    sf::RenderWindow window(sf::VideoMode({ 900, 900 }), "Zadanie 3 - Dawid Gradowski 251524");
 	Camera camera(window);
 	unsigned int framerate = 60;
 	window.setFramerateLimit(framerate);
 
 	float deltaTime = 1.f / static_cast<float>(framerate);
-	const sf::Vector2f TILE_SIZE = { 48.f, 48.f };
+	const sf::Vector2f TILE_SIZE = { 45.f, 45.f };
 
 	// Player 1
 	std::shared_ptr<sf::RectangleShape> player1 = std::make_shared<sf::RectangleShape>(sf::Vector2f(60.f, 60.f));
@@ -82,7 +104,7 @@ int main()
 
     TileFactory tileFactory(TILE_SIZE);
 
-    TileData levelData = LevelLoader::loadTileData("./res/maps/map.txt");
+    TileData levelData = LevelLoader::loadTileData("./res/maps/labirynth.txt");
 
     GameMap gameMap(TILE_SIZE);
     gameMap.loadLevel(levelData, tileFactory);
@@ -93,12 +115,34 @@ int main()
 	BallFactory bf(&t_moon, sf::Color::White);
 
 
-	ballPhysics.addBall(bf.createBall({ 300, 200 }, { 100, 100 }));
-	ballPhysics.addBall(bf.createBall({ 1000, 300 }, { -100, -100 }));
-	ballPhysics.addBall(bf.createBall({ 250, 400 }, { 100, -100 }));
-	ballPhysics.addBall(bf.createBall({ 250, 260 }, { -100, 100 }));
-	ballPhysics.addBall(bf.createBall({ 600, 100 }, { 100, 100 }));
-	ballPhysics.addBall(bf.createBall({ 300, 50 }, { -100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 300, 200 }, { 100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 1000, 300 }, { -100, -100 }));
+	// ballPhysics.addBall(bf.createBall({ 250, 400 }, { 100, -100 }));
+	// ballPhysics.addBall(bf.createBall({ 250, 260 }, { -100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 600, 100 }, { 100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 300, 50 }, { -100, 100 }));
+
+	// ballPhysics.addBall(bf.createBall({ 10, 200 }, { 100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 100, 300 }, { -100, -100 }));
+	// ballPhysics.addBall(bf.createBall({ 10, 400 }, { 100, -100 }));
+	// ballPhysics.addBall(bf.createBall({ 10, 260 }, { -100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 10, 100 }, { 100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 10, 50 }, { -100, 100 }));
+	
+	// ballPhysics.addBall(bf.createBall({ 20, 200 }, { 100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 200, 300 }, { -100, -100 }));
+	// ballPhysics.addBall(bf.createBall({ 20, 400 }, { 100, -100 }));
+	// ballPhysics.addBall(bf.createBall({ 20, 260 }, { -100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 20, 100 }, { 100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 20, 50 }, { -100, 100 }));
+
+	// ballPhysics.addBall(bf.createBall({ 30, 200 }, { 100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 300, 300 }, { -100, -100 }));
+	// ballPhysics.addBall(bf.createBall({ 30, 400 }, { 100, -100 }));
+	// ballPhysics.addBall(bf.createBall({ 30, 260 }, { -100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 30, 100 }, { 100, 100 }));
+	// ballPhysics.addBall(bf.createBall({ 30, 50 }, { -100, 100 }));
+	
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -106,6 +150,10 @@ int main()
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
+
+		// ballPhysics.b_separating = !isPressedO();
+		// ballPhysics.b_bouncing = !isPressedP();
+
 
 		ballPhysics.update(deltaTime);
 		player1->move(keyboardInput() * 250.f * deltaTime);

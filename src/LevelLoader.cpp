@@ -39,7 +39,8 @@ TileData LevelLoader::loadTileData(const std::string& path)
 
             std::vector<TileType> row;
 
-            for (char tileChar : line) {
+            for (int x = 0; x < width; ++x) {
+				char tileChar = line[x];
                 if (std::isdigit(tileChar)) {
                     int tileInt = tileChar - '0';
 
