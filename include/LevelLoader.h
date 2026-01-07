@@ -3,7 +3,6 @@
 #ifndef LEVELLOADER_H
 #define LEVELLOADER_H
 #include <string>
-#include <unordered_map>
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "TileTypes.h"

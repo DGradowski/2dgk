@@ -42,3 +42,22 @@ Tile* GameMap::getTile(int gridX, int gridY)
 	}
 	return nullptr;
 }
+
+std::vector<sf::FloatRect> GameMap::getWalls()
+{
+	std::vector<sf::FloatRect> walls;
+
+    for (int y = 0; y < mHeight; ++y) {
+        for (int x = 0; x < mWidth; ++x) {
+            // Sprawdzamy czy wskaźnik na kafelek istnieje (nie jest pusty)
+            if (mTiles[y][x]) {
+                // Jeśli kafelek jest oznaczony jako kolizyjny
+                if (mTiles[y][x]->isCollidable()) {
+                    // Dodajemy jego granice do listy ścian
+                    walls.push_back(mTiles[y][x]->getBounds());
+                }
+            }
+        }
+    }
+    return walls;
+}

@@ -10,16 +10,16 @@ class PlayerObject;
 class InputComponent
 {
 public:
-	InputComponent();
+	InputComponent(sf::Keyboard::Key up, sf::Keyboard::Key down, sf::Keyboard::Key left, sf::Keyboard::Key right);
 	~InputComponent();
 
 	void update(PlayerObject& player);
 
 private:
-	sf::Keyboard::Key k_Up;
-	sf::Keyboard::Key k_Down;
-	sf::Keyboard::Key k_Left;
-	sf::Keyboard::Key k_Right;
+	sf::Keyboard::Key kUp;
+	sf::Keyboard::Key kDown;
+	sf::Keyboard::Key kLeft;
+	sf::Keyboard::Key kRight;
 };
 
 #endif // !INPUTCOMPONENT_H

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SFML/Graphics/Rect.hpp"
 #ifndef GAMEMAP_H
 #define GAMEMAP_H
 #include <SFML/Graphics.hpp>
@@ -8,7 +9,6 @@
 #include "Tile.h"
 #include "TileFactory.h"
 #include "LevelLoader.h"
-#include "TileTypes.h"
 
 class GameMap : public sf::Drawable {
 public:
@@ -19,6 +19,8 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	Tile* getTile(int gridX, int gridY);
+
+	std::vector<sf::FloatRect> getWalls();
 
 private:
 	std::vector<std::vector<std::unique_ptr<Tile>>> mTiles;

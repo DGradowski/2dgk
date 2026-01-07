@@ -1,4 +1,5 @@
 ﻿#include "Camera.h"
+#include "player/PlayerObject.h"
 
 #include <iostream>
 #include <cmath>
@@ -14,12 +15,12 @@ Camera::~Camera()
 {
 }
 
-void Camera::setTarget(std::shared_ptr<sf::Shape> pShape)
+void Camera::setTarget(std::shared_ptr<PlayerObject> pShape)
 {
 	pTarget = pShape;
 }
 
-void Camera::setTarget2(std::shared_ptr<sf::Shape> pShape)
+void Camera::setTarget2(std::shared_ptr<PlayerObject> pShape)
 {
 	pTarget2 = pShape;
 }
@@ -37,24 +38,32 @@ void Camera::setYAlgorithm(CameraAlgorithm algorithm)
 void Camera::moveX(float deltaTime)
 {
 	if (!pTarget || !pTarget2) return;
-	float targetX = pTarget->getPosition().x + 30.f  - view.getCenter().x;
-	float target2X = pTarget2->getPosition().x + 30.f - view.getCenter().x;
+	float targetX = pTarget->Position.x + 15.f  - view.getCenter().x;
+	float target2X = pTarget2->Position.x + 15.f - view.getCenter().x;
 	view.move({ ((targetX + target2X) / 2.f) * 5.f * deltaTime, 0.f });
 	if (view.getCenter().x - view.getSize().x / 2.f <= 0)
 	{
 		view.move({ (view.getCenter().x - view.getSize().x / 2.f) * -1, 0});
+	}
+	else if (view.getCenter().x + view.getSize().x / 2.f >= maxX)
+	{
+		view.move({ maxX - (view.getCenter().x + view.getSize().x / 2.f), 0});
 	}
 }
 
 void Camera::moveY(float deltaTime)
 {
 	if (!pTarget || !pTarget2) return;
-	float targetY = pTarget->getPosition().y + 30.f - view.getCenter().y;
-	float target2Y = pTarget2->getPosition().y + 30.f - view.getCenter().y;
+	float targetY = pTarget->Position.y + 15.f - view.getCenter().y;
+	float target2Y = pTarget2->Position.y + 15.f - view.getCenter().y;
 	view.move({ 0.f, ((targetY + target2Y) / 2.f) * 5.f * deltaTime });
-	if (view.getCenter().y - view.getSize().y / 2.f < 0)
+	if (view.getCenter().y - view.getSize().y / 2.f <= 0)
 	{
 		view.move({ 0.f , (view.getCenter().y - view.getSize().y / 2.f) * -1 });
+	}
+	if (view.getCenter().y + view.getSize().y / 2.f >= maxY)
+	{
+		view.move({ 0 , maxY - (view.getCenter().y + view.getSize().y / 2.f)});
 	}
 }
 
@@ -62,8 +71,8 @@ void Camera::resize(float deltaTime)
 {
 	if (!pTarget || !pTarget2) return;
 
-	sf::Vector2f p1 = pTarget->getPosition();
-	sf::Vector2f p2 = pTarget2->getPosition();
+	sf::Vector2f p1 = pTarget->Position;
+	sf::Vector2f p2 = pTarget2->Position;
 
 	sf::Vector2f targetCenter = (p1 + p2) / 2.0f;
 
@@ -98,4 +107,10 @@ void Camera::move(float deltaTime)
 	moveX(deltaTime);
 	moveY(deltaTime);
 	mWindow.setView(view);
+}
+
+void Camera::setMaxValues(float x, float y)
+{
+	maxX = x;
+	maxY = y;
 }
